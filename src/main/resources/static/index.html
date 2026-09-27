@@ -1,0 +1,150 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Employee Onboarding Portal</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Employee Onboarding Portal</h1>
+        <p>Register and manage employee onboarding</p>
+    </header>
+
+    <main>
+
+        <!-- Registration Form -->
+        <section class="card">
+
+            <h2>Employee Registration</h2>
+
+            <form id="employeeForm">
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter full name"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter email"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="Enter phone number"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department</label>
+
+                    <select id="department" required>
+                        <option value="">Select Department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Human Resources">Human Resources</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Operations">Operations</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="designation">Designation</label>
+
+                    <input
+                        type="text"
+                        id="designation"
+                        placeholder="Enter designation"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="joiningDate">Joining Date</label>
+
+                    <input
+                        type="date"
+                        id="joiningDate"
+                        required>
+                </div>
+
+                <button type="submit" class="primary-btn">
+                    Register Employee
+                </button>
+
+            </form>
+
+            <p id="message"></p>
+
+        </section>
+
+
+        <!-- Employee List -->
+        <section class="card">
+
+            <div class="section-header">
+
+                <h2>Employee List</h2>
+
+                <button
+                    onclick="loadEmployees()"
+                    class="secondary-btn">
+                    Refresh
+                </button>
+
+            </div>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Designation</th>
+                            <th>Joining Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="employeeTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Employee Onboarding Portal | DevOps Project</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
+```
