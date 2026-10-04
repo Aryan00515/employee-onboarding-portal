@@ -1,4 +1,4 @@
-```javascript
+
 const API_URL = "/api/employees";
 
 // Register Employee
@@ -6,13 +6,67 @@ document.getElementById("employeeForm").addEventListener("submit", async functio
 
     event.preventDefault();
 
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const department = document.getElementById("department").value;
+    const designation = document.getElementById("designation").value.trim();
+    const joiningDate = document.getElementById("joiningDate").value;
+
+    const message = document.getElementById("message");
+
+    // Validation
+    if (name.length < 2) {
+        message.textContent = "Name must contain at least 2 characters.";
+        return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+        message.textContent = "Please enter a valid email address.";
+        return;
+    }
+
+    const phonePattern = /^[0-9]{10}$/;
+
+    if (!phonePattern.test(phone)) {
+        message.textContent = "Phone number must contain exactly 10 digits.";
+        return;
+    }
+
+    if (department === "") {
+        message.textContent = "Please select a department.";
+        return;
+    }
+
+    if (designation.length < 2) {
+        message.textContent = "Designation must contain at least 2 characters.";
+        return;
+    }
+
+    if (joiningDate === "") {
+        message.textContent = "Please select a joining date.";
+        return;
+    }
+
+    const selectedDate = new Date(joiningDate);
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+        message.textContent = "Joining date cannot be in the past.";
+        return;
+    }
+
     const employee = {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        phone: document.getElementById("phone").value,
-        department: document.getElementById("department").value,
-        designation: document.getElementById("designation").value,
-        joiningDate: document.getElementById("joiningDate").value
+        name: name,
+        email: email,
+        phone: phone,
+        department: department,
+        designation: designation,
+        joiningDate: joiningDate
     };
 
     try {
@@ -31,7 +85,7 @@ document.getElementById("employeeForm").addEventListener("submit", async functio
 
         const data = await response.json();
 
-        document.getElementById("message").textContent =
+        message.textContent =
             "Employee registered successfully! ID: " + data.id;
 
         document.getElementById("employeeForm").reset();
@@ -42,7 +96,7 @@ document.getElementById("employeeForm").addEventListener("submit", async functio
 
         console.error(error);
 
-        document.getElementById("message").textContent =
+        message.textContent =
             "Error registering employee.";
 
     }
@@ -171,4 +225,4 @@ window.addEventListener("DOMContentLoaded", function () {
     loadEmployees();
 
 });
-```
+
