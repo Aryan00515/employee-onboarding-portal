@@ -201,9 +201,9 @@ The project will progressively integrate:
 
 Current stage:
 
-**MVP Development and Git/GitHub Setup**
+**MVP Release Candidate**
 
-The current MVP supports employee registration, employee listing, employee status tracking, approval and rejection.
+The current MVP supports employee registration, validation, employee listing, department search, employee status tracking, approval and rejection.
 
 ## Author
 
