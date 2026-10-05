@@ -56,3 +56,6 @@ Spring Boot Application
   |
   v
 H2 Database
+### Week 7 CI Integration
+Jenkins CI configured for automated Maven builds and artifact archiving.
+
