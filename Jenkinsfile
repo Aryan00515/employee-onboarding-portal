@@ -52,6 +52,7 @@ pipeline {
 
                     cp target/*.jar deployment/onboarding-portal.jar
 
+                    JENKINS_NODE_COOKIE=dontKillMe \
                     nohup java -jar deployment/onboarding-portal.jar \
                         --server.port="$APP_PORT" \
                         > deployment/app.log 2>&1 &
