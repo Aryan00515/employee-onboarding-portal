@@ -33,6 +33,7 @@ class FormValidationTest extends BaseSeleniumTest {
 
         String message = driver.findElement(By.id("message")).getText();
 
+        
         assertEquals(
                 "Phone number must contain exactly 10 digits.",
                 message,

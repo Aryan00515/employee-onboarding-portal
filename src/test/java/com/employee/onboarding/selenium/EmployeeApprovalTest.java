@@ -4,6 +4,7 @@ package com.employee.onboarding.selenium;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -20,13 +21,21 @@ class EmployeeApprovalTest extends BaseSeleniumTest {
         String uniqueEmail =
                 "approval" + System.currentTimeMillis() + "@example.com";
 
-        driver.findElement(By.id("name")).sendKeys("Approval Test");
-        driver.findElement(By.id("email")).sendKeys(uniqueEmail);
-        driver.findElement(By.id("phone")).sendKeys("9876543210");
+        driver.findElement(By.id("name"))
+                .sendKeys("Approval Test");
+
+        driver.findElement(By.id("email"))
+                .sendKeys(uniqueEmail);
+
+        driver.findElement(By.id("phone"))
+                .sendKeys("9876543210");
+
         driver.findElement(By.id("department"))
                 .sendKeys("Computer Science");
+
         driver.findElement(By.id("designation"))
                 .sendKeys("QA Engineer");
+
         driver.findElement(By.id("joiningDate"))
                 .sendKeys(LocalDate.now().plusDays(7).toString());
 
@@ -38,7 +47,9 @@ class EmployeeApprovalTest extends BaseSeleniumTest {
                 "//tr[td[contains(normalize-space(), '" + uniqueEmail + "')]]"
         );
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(employeeRow));
+        wait.until(
+                ExpectedConditions.visibilityOfElementLocated(employeeRow)
+        );
 
         WebElement row = driver.findElement(employeeRow);
 
@@ -49,9 +60,15 @@ class EmployeeApprovalTest extends BaseSeleniumTest {
 
         row.findElement(By.cssSelector(".approve-btn")).click();
 
+        // Re-find the row on each poll because the table may refresh.
         wait.until(driver -> {
-            WebElement updatedRow = driver.findElement(employeeRow);
-            return updatedRow.getText().contains("APPROVED");
+            try {
+                return driver.findElement(employeeRow)
+                        .getText()
+                        .contains("APPROVED");
+            } catch (StaleElementReferenceException e) {
+                return false;
+            }
         });
 
         String updatedRowText = driver.findElement(employeeRow).getText();
