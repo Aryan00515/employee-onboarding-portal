@@ -33,10 +33,11 @@ class FormValidationTest extends BaseSeleniumTest {
 
         String message = driver.findElement(By.id("message")).getText();
 
+        
         assertEquals(
-        "Invalid phone number.",
-        message,
-        "Invalid phone numbers should be rejected."
-);
+                "Phone number must contain exactly 10 digits.",
+                message,
+                "Invalid phone numbers should be rejected."
+        );
     }
 }
