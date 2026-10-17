@@ -35,9 +35,51 @@ pipeline {
             }
         }
 
+        
         stage('Continuous Testing') {
             steps {
-                sh './mvnw test'
+                sh '''
+                    set -eu
+
+                    echo "Starting application for Selenium tests..."
+
+                    ./mvnw spring-boot:run \
+                      -Dspring-boot.run.arguments=--server.port=18088 \
+                      -Dspring-boot.run.jvmArguments=-Dspring.devtools.restart.enabled=false \
+                      > app.log 2>&1 &
+
+                    APP_PID=$!
+
+                    cleanup() {
+                        pkill -P "$APP_PID" 2>/dev/null || true
+                        kill "$APP_PID" 2>/dev/null || true
+                    }
+
+                    trap cleanup EXIT
+
+                    APP_READY=0
+
+                    for i in $(seq 1 30); do
+                        if curl -fsS http://127.0.0.1:18088/ \
+                            >/dev/null; then
+                            APP_READY=1
+                            break
+                        fi
+
+                        sleep 2
+                    done
+
+                    if [ "$APP_READY" -ne 1 ]; then
+                        echo "Application failed to start."
+                        cat app.log
+                        exit 1
+                    fi
+
+                    echo "Application is ready. Running Selenium tests..."
+
+                    ./mvnw test \
+                      -Dapp.url=http://127.0.0.1:18088
+                '''
             }
             post {
                 always {
@@ -46,6 +88,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Package') {
             steps {
