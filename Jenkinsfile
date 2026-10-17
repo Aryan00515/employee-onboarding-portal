@@ -20,7 +20,7 @@ pipeline {
     DOCKERHUB_USER = 'aryanparulekar'
     IMAGE_NAME = 'aryanparulekar/employee-onboarding-portal'
     CONTAINER_NAME = 'employee-onboarding-portal'
-    PATH+DOCKER = '/Users/aryanparulekar15/.docker/bin'
+    PATH = "/Users/aryanparulekar15/.docker/bin:${env.PATH}"
 }
 
     stages {
