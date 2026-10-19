@@ -1,0 +1,66 @@
+
+PLAY [Configure Employee Onboarding Portal prerequisites] **********************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Verify target operating system is macOS] *********************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [Check Homebrew installation] *********************************************
+ok: [localhost]
+
+TASK [Check OpenJDK 21 installation] *******************************************
+ok: [localhost]
+
+TASK [Install OpenJDK 21 if missing] *******************************************
+skipping: [localhost]
+
+TASK [Create configuration directories] ****************************************
+[WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.
+[DEPRECATION WARNING]: INJECT_FACTS_AS_VARS default to `True` is deprecated, top-level facts will not be auto injected after the change. This feature will be removed from ansible-core version 2.24.
+Origin: /Users/aryanparulekar15/Downloads/onboarding-portal 2/ansible/week13/playbook.yml:9:18
+
+7   vars:
+8     portal_user: "{{ ansible_user_id }}"
+9     portal_home: "{{ ansible_env.HOME }}"
+                   ^ column 18
+
+Use `ansible_facts["fact_name"]` (no `ansible_` prefix) instead.
+
+changed: [localhost] => (item=/Users/aryanparulekar15/employee-onboarding-portal-ops)
+changed: [localhost] => (item=/Users/aryanparulekar15/employee-onboarding-portal-ops/config)
+changed: [localhost] => (item=/Users/aryanparulekar15/employee-onboarding-portal-ops/logs)
+
+TASK [Write configuration specification on target] *****************************
+[DEPRECATION WARNING]: INJECT_FACTS_AS_VARS default to `True` is deprecated, top-level facts will not be auto injected after the change. This feature will be removed from ansible-core version 2.24.
+Origin: /Users/aryanparulekar15/Downloads/onboarding-portal 2/ansible/week13/playbook.yml:8:18
+
+6
+7   vars:
+8     portal_user: "{{ ansible_user_id }}"
+                   ^ column 18
+
+Use `ansible_facts["fact_name"]` (no `ansible_` prefix) instead.
+
+changed: [localhost]
+
+TASK [Check Docker CLI location] ***********************************************
+ok: [localhost]
+
+TASK [Report Docker CLI status] ************************************************
+ok: [localhost] => {
+    "msg": "Docker CLI at /Users/aryanparulekar15/.docker/bin/docker: found"
+}
+
+TASK [Report configuration completion] *****************************************
+ok: [localhost] => {
+    "msg": "Configuration tasks completed. Review the PLAY RECAP for failures."
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=9    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+

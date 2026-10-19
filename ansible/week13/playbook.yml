@@ -1,0 +1,102 @@
+---
+- name: Configure Employee Onboarding Portal prerequisites
+  hosts: portal_target
+  connection: local
+  gather_facts: true
+
+  vars:
+    portal_user: "{{ ansible_user_id }}"
+    portal_home: "{{ ansible_env.HOME }}"
+    portal_dir: "{{ portal_home }}/employee-onboarding-portal-ops"
+    java_package: "openjdk@21"
+
+  tasks:
+    - name: Verify target operating system is macOS
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['system'] == "Darwin"
+        fail_msg: "This playbook is designed for macOS."
+
+    - name: Check Homebrew installation
+      ansible.builtin.command: brew --version
+      register: brew_check
+      changed_when: false
+
+    - name: Check OpenJDK 21 installation
+      ansible.builtin.command: brew list --versions openjdk@21
+      register: java_check
+      changed_when: false
+      failed_when: false
+
+    - name: Install OpenJDK 21 if missing
+      ansible.builtin.command: brew install openjdk@21
+      when: java_check.rc != 0
+
+    - name: Create configuration directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ portal_dir }}"
+        - "{{ portal_dir }}/config"
+        - "{{ portal_dir }}/logs"
+
+    - name: Write configuration specification on target
+      ansible.builtin.copy:
+        dest: "{{ portal_dir }}/config/configuration-spec.txt"
+        mode: "0644"
+        content: |
+          Employee Onboarding Portal - Configuration Specification
+
+          Target: Local macOS machine
+          Managed user: {{ portal_user }}
+
+          Required prerequisites:
+          - Homebrew
+          - OpenJDK 21
+          - Git
+          - Docker Desktop and Docker CLI
+          - Maven Wrapper (./mvnw)
+          - Jenkins
+
+          Directories:
+          - {{ portal_dir }}
+          - {{ portal_dir }}/config
+          - {{ portal_dir }}/logs
+
+          Project files:
+          - Jenkinsfile
+          - Dockerfile
+          - pom.xml
+          - src/
+
+          Ports:
+          - 8080: Jenkins host port and application container port
+          - 8081: application host port
+          - 18088: temporary testing port
+
+          Services:
+          - Jenkins: CI/CD pipeline
+          - Docker Desktop: container runtime
+          - Employee Onboarding Portal: application container
+
+          Notes:
+          - Existing macOS user is reused.
+          - Firewall rules are not changed.
+          - Existing Jenkins and application containers are not restarted.
+
+    - name: Check Docker CLI location
+      ansible.builtin.stat:
+        path: "{{ portal_home }}/.docker/bin/docker"
+      register: docker_cli
+
+    - name: Report Docker CLI status
+      ansible.builtin.debug:
+        msg: >-
+          Docker CLI at {{ portal_home }}/.docker/bin/docker:
+          {{ 'found' if docker_cli.stat.exists else 'not found at this path; check which docker' }}
+
+    - name: Report configuration completion
+      ansible.builtin.debug:
+        msg: "Configuration tasks completed. Review the PLAY RECAP for failures."

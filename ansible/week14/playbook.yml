@@ -1,0 +1,42 @@
+---
+- name: Provision Employee Onboarding Portal for Week 14
+  hosts: portal_target
+  connection: local
+  gather_facts: false
+
+  vars:
+    image_repository: "aryanparulekar/employee-onboarding-portal"
+    app_container: "employee-onboarding-portal-week14"
+    app_port: "8082"
+    container_port: "8080"
+    stable_tag: "17"
+    docker_socket: "unix:///Users/aryanparulekar15/.docker/run/docker.sock"
+
+  tasks:
+    - name: Check Docker CLI
+      ansible.builtin.command: docker --version
+      changed_when: false
+
+    - name: Check Docker daemon
+      ansible.builtin.command: docker info
+      changed_when: false
+
+    - name: Pull stable application image
+      community.docker.docker_image:
+        name: "{{ image_repository }}:{{ stable_tag }}"
+        source: pull
+      environment:
+        DOCKER_HOST: "{{ docker_socket }}"
+
+    - name: Ensure application container is running
+      community.docker.docker_container:
+        name: "{{ app_container }}"
+        image: "{{ image_repository }}:{{ stable_tag }}"
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "{{ app_port }}:{{ container_port }}"
+        comparisons:
+          image: strict
+      environment:
+        DOCKER_HOST: "{{ docker_socket }}"

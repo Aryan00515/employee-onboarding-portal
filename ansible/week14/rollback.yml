@@ -1,0 +1,35 @@
+
+---
+- name: Roll back Employee Onboarding Portal to release 16
+  hosts: portal_target
+  connection: local
+  gather_facts: false
+
+  vars:
+    image_repository: "aryanparulekar/employee-onboarding-portal"
+    app_container: "employee-onboarding-portal-week14"
+    app_port: "8082"
+    container_port: "8080"
+    rollback_tag: "16"
+    docker_socket: "unix:///Users/aryanparulekar15/.docker/run/docker.sock"
+
+  tasks:
+    - name: Pull rollback image
+      community.docker.docker_image:
+        name: "{{ image_repository }}:{{ rollback_tag }}"
+        source: pull
+      environment:
+        DOCKER_HOST: "{{ docker_socket }}"
+
+    - name: Deploy rollback release
+      community.docker.docker_container:
+        name: "{{ app_container }}"
+        image: "{{ image_repository }}:{{ rollback_tag }}"
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "{{ app_port }}:{{ container_port }}"
+        comparisons:
+          image: strict
+      environment:
+        DOCKER_HOST: "{{ docker_socket }}"
